@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOIT — Task Manager</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <!-- Aurora background -->
+  <div class="aurora">
+    <div class="aurora-band a1"></div>
+    <div class="aurora-band a2"></div>
+    <div class="aurora-band a3"></div>
+  </div>
+  <div class="noise"></div>
+
+  <div class="layout">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="10" fill="url(#bg)"/>
+            <path d="M10 18l6 6 10-12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="bg" x1="0" y1="0" x2="36" y2="36">
+                <stop stop-color="#7c3aed"/>
+                <stop offset="1" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="brand-name">DOIT</span>
+      </div>
+
+      <!-- Progress ring -->
+      <div class="progress-section">
+        <div class="ring-wrap">
+          <svg class="ring" viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+            <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="50"/>
+          </svg>
+          <div class="ring-label">
+            <span id="pct-text">0%</span>
+            <small>done</small>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <span id="s-total">0</span>
+            <label>Total</label>
+          </div>
+          <div class="stat-box">
+            <span id="s-done" class="c-green">0</span>
+            <label>Done</label>
+          </div>
+          <div class="stat-box">
+            <span id="s-left" class="c-amber">0</span>
+            <label>Left</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <nav class="sidebar-nav">
+        <p class="nav-label">Views</p>
+        <button class="nav-btn active" data-filter="all">
+          <i class="fa fa-layer-group"></i> All Tasks
+          <span class="nav-count" id="count-all">0</span>
+        </button>
+        <button class="nav-btn" data-filter="active">
+          <i class="fa fa-bolt"></i> Active
+          <span class="nav-count" id="count-active">0</span>
+        </button>
+        <button class="nav-btn" data-filter="completed">
+          <i class="fa fa-circle-check"></i> Completed
+          <span class="nav-count" id="count-done">0</span>
+        </button>
+        <p class="nav-label" style="margin-top:18px">Priority</p>
+        <button class="nav-btn" data-filter="high">
+          <span class="dot red"></span> High
+          <span class="nav-count" id="count-high">0</span>
+        </button>
+        <button class="nav-btn" data-filter="medium">
+          <span class="dot amber"></span> Medium
+          <span class="nav-count" id="count-med">0</span>
+        </button>
+        <button class="nav-btn" data-filter="low">
+          <span class="dot green"></span> Low
+          <span class="nav-count" id="count-low">0</span>
+        </button>
+      </nav>
+
+      <button class="btn-clear-done" id="clear-done">
+        <i class="fa fa-broom"></i> Clear Completed
+      </button>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <main class="main">
+
+      <!-- Top bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 class="page-title" id="page-title">All Tasks</h1>
+          <p class="page-sub" id="page-sub">Everything on your plate</p>
+        </div>
+        <div class="topbar-right">
+          <div class="search-wrap">
+            <i class="fa fa-search"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Search tasks…"/>
+          </div>
+          <button class="btn-menu-toggle" id="menu-toggle" title="Toggle sidebar">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Add task card -->
+      <div class="add-card">
+        <div class="add-row">
+          <input type="text" id="task-input" class="task-field" placeholder="What needs to get done?" maxlength="120"/>
+          <button class="btn-add" id="add-btn">
+            <i class="fa fa-plus"></i><span>Add</span>
+          </button>
+        </div>
+        <div class="add-meta">
+          <div class="meta-chip">
+            <i class="fa fa-calendar"></i>
+            <input type="date" id="task-date" class="chip-input"/>
+          </div>
+          <div class="meta-chip">
+            <i class="fa fa-clock"></i>
+            <input type="time" id="task-time" class="chip-input"/>
+          </div>
+          <div class="meta-chip">
+            <i class="fa fa-tag"></i>
+            <select id="task-priority" class="chip-input">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="meta-chip">
+            <i class="fa fa-folder"></i>
+            <input type="text" id="task-category" class="chip-input" placeholder="Category…" maxlength="20"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sort bar -->
+      <div class="sort-bar">
+        <span class="sort-label">Sort:</span>
+        <button class="sort-btn active" data-sort="newest">Newest</button>
+        <button class="sort-btn" data-sort="oldest">Oldest</button>
+        <button class="sort-btn" data-sort="priority">Priority</button>
+        <button class="sort-btn" data-sort="alpha">A–Z</button>
+        <div class="flex-gap"></div>
+        <span class="result-count" id="result-count">0 tasks</span>
+      </div>
+
+      <!-- Task list -->
+      <div class="task-list" id="task-list">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-art">
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+              <path d="M35 50l10 10 20-20" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="empty-title">Nothing here yet</p>
+          <p class="empty-sub">Add your first task above and start crushing it.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═══ EDIT MODAL ═══ -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal-box" id="modal-box">
+      <div class="modal-head">
+        <span class="modal-title"><i class="fa fa-pen-to-square"></i> Edit Task</span>
+        <button class="modal-x" id="modal-close"><i class="fa fa-xmark"></i></button>
+      </div>
+      <input type="text" id="edit-input" class="task-field" placeholder="Task description…" maxlength="120"/>
+      <div class="add-meta">
+        <div class="meta-chip">
+          <i class="fa fa-calendar"></i>
+          <input type="date" id="edit-date" class="chip-input"/>
+        </div>
+        <div class="meta-chip">
+          <i class="fa fa-clock"></i>
+          <input type="time" id="edit-time" class="chip-input"/>
+        </div>
+        <div class="meta-chip">
+          <i class="fa fa-tag"></i>
+          <select id="edit-priority" class="chip-input">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="meta-chip">
+          <i class="fa fa-folder"></i>
+          <input type="text" id="edit-category" class="chip-input" placeholder="Category…" maxlength="20"/>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-ghost" id="modal-cancel">Cancel</button>
+        <button class="btn-save" id="modal-save"><i class="fa fa-floppy-disk"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
